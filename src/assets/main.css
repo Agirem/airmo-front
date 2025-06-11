@@ -1,0 +1,117 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+@font-face {
+  font-family: 'Google Sans';
+  src: url('./GoogleSans-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Google Sans';
+  src: url('./GoogleSans-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Google Sans';
+  src: url('./GoogleSans-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-family: 'Google Sans', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  body {
+    @apply bg-slate-50 text-slate-900;
+  }
+  
+  /* Focus styles */
+  *:focus-visible {
+    @apply outline-none ring-2 ring-sky-500 ring-offset-2;
+  }
+  
+  /* Form elements */
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  
+  input[type="number"] {
+    -moz-appearance: textfield;
+  }
+  
+  /* Amélioration des inputs */
+  input, select {
+    @apply transition-all duration-200;
+  }
+  
+  input:focus, select:focus {
+    @apply ring-2 ring-sky-500 ring-offset-2 outline-none;
+  }
+  
+  /* Amélioration des boutons */
+  button {
+    @apply transition-all duration-200 transform;
+  }
+  
+  button:active:not(:disabled) {
+    @apply scale-95;
+  }
+  
+  button:disabled {
+    @apply opacity-50 cursor-not-allowed;
+  }
+}
+
+@layer components {
+  .card {
+    @apply bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-200;
+  }
+  
+  .input-label {
+    @apply block text-sm font-medium text-slate-700 mb-1;
+  }
+  
+  .input-field {
+    @apply block w-full rounded-lg border-slate-200 bg-white px-4 py-3 text-slate-900 focus:border-sky-500 focus:ring-sky-500 sm:text-sm;
+  }
+  
+  .btn-primary {
+    @apply bg-sky-500 text-white rounded-lg px-4 py-2.5 font-medium hover:bg-sky-600 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2;
+  }
+  
+  .btn-secondary {
+    @apply btn bg-white text-slate-700 border-slate-300 hover:bg-slate-50 focus:ring-sky-500;
+  }
+  
+  .btn-success {
+    @apply bg-emerald-500 text-white rounded-lg px-4 py-2.5 font-medium hover:bg-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2;
+  }
+  
+  .btn-danger {
+    @apply btn bg-red-600 text-white hover:bg-red-700 focus:ring-red-500;
+  }
+}
+
+@layer utilities {
+  .scrollbar-hide {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+} 
