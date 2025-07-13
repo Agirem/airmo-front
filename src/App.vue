@@ -648,10 +648,14 @@ async function handleBuy() {
       operator: buyForm.operator,
       amount: buyForm.amount
     })
-    
-    showToast(response.message)
-    buyForm.amount = null
-    await refreshStock()
+
+    if (response.authorization_url) {
+      window.location.href = response.authorization_url
+      return // On ne fait rien d'autre, la redirection prend le relais
+    }
+
+    // Si pas d'URL, on affiche le message de l'API
+    showToast(response.message || "Erreur lors de l'initialisation du paiement", 'error')
   } catch (error) {
     showToast(error.message || 'Une erreur est survenue', 'error')
   } finally {

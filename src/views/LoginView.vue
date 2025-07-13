@@ -1,27 +1,30 @@
 <template>
-  <div class="min-h-screen bg-slate-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-    <div class="sm:mx-auto sm:w-full sm:max-w-md">
+  <div class="min-h-screen bg-gradient-to-br from-sky-50 to-sky-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div class="sm:mx-auto sm:w-full sm:max-w-md flex flex-col items-center">
       <img
-        class="mx-auto h-12 w-auto"
+        class="mx-auto h-16 w-auto mb-2 drop-shadow-lg"
         src="/logo.svg"
-        alt="Logo"
+        alt="Logo AirMo"
       />
-      <h2 class="mt-6 text-center text-3xl font-extrabold text-slate-900">
+      <h2 class="mt-2 text-center text-3xl font-extrabold text-slate-900">
         Connectez-vous à votre compte
       </h2>
+      <p class="mt-2 text-center text-base text-slate-600 font-medium">
+        Bienvenue sur AirMo, votre solution de paiement mobile simple et sécurisée.
+      </p>
       <p class="mt-2 text-center text-sm text-slate-600">
-        Ou
+        Vous n'avez pas de compte ?
         <router-link
           to="/register"
-          class="font-medium text-sky-600 hover:text-sky-500"
+          class="font-medium text-sky-600 hover:text-sky-500 transition-colors"
         >
-          créez un nouveau compte
+          Inscrivez-vous
         </router-link>
       </p>
     </div>
 
     <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-      <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+      <div class="bg-white py-8 px-6 shadow-xl sm:rounded-2xl sm:px-10 border border-sky-100">
         <form
           class="space-y-6"
           @submit.prevent="handleSubmit"
@@ -33,14 +36,15 @@
             >
               Numéro de téléphone
             </label>
-            <div class="mt-1">
+            <div class="mt-1 relative">
               <input
                 id="phone"
                 v-model="form.phone"
                 name="phone"
                 type="tel"
                 required
-                class="appearance-none block w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm placeholder-slate-400 focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm"
+                placeholder="Ex: 690123456"
+                class="transition-all duration-200 appearance-none block w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-400 focus:border-sky-500 sm:text-sm"
                 :class="{ 'border-red-300': errors.phone }"
               />
               <p
@@ -59,14 +63,15 @@
             >
               Mot de passe
             </label>
-            <div class="mt-1">
+            <div class="mt-1 relative">
               <input
                 id="password"
                 v-model="form.password"
                 name="password"
                 type="password"
                 required
-                class="appearance-none block w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm placeholder-slate-400 focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm"
+                placeholder="Votre mot de passe"
+                class="transition-all duration-200 appearance-none block w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-400 focus:border-sky-500 sm:text-sm"
                 :class="{ 'border-red-300': errors.password }"
               />
               <p
@@ -98,9 +103,9 @@
             <div class="text-sm">
               <a
                 href="#"
-                class="font-medium text-sky-600 hover:text-sky-500"
+                class="font-medium text-sky-600 hover:text-sky-500 transition-colors"
               >
-                Mot de passe oublié?
+                Mot de passe oublié ?
               </a>
             </div>
           </div>
@@ -109,7 +114,7 @@
             <button
               type="submit"
               :disabled="isLoading"
-              class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-sky-600 hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 disabled:opacity-50 disabled:cursor-not-allowed"
+              class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-semibold text-white bg-gradient-to-r from-sky-500 to-sky-600 hover:from-sky-600 hover:to-sky-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
             >
               <svg
                 v-if="isLoading"
@@ -184,4 +189,4 @@ async function handleSubmit() {
     isLoading.value = false
   }
 }
-</script> 
+</script>
