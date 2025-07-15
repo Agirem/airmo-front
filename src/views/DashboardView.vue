@@ -644,11 +644,15 @@ async function handleSell() {
     // TODO: Implement actual API call
     await new Promise(resolve => setTimeout(resolve, 1500)) // Simulate API call
     
+    const numeroDestinataire = '123456789' // Remplace par la logique réelle si besoin
     toastStore.show({
       type: 'success',
       title: 'Demande enregistrée',
-      message: `Veuillez transférer ${formatAmount(sellForm.amount)} F au numéro suivant: 123456789`
+      message: `Veuillez transférer ${formatAmount(sellForm.amount)} F au numéro suivant: ${numeroDestinataire}`
     })
+    
+    // Ouvre l'application téléphone avec le numéro pré-rempli (mobile uniquement)
+    window.location.href = `tel:${numeroDestinataire}`
     
     showSellModal.value = false
     sellForm.amount = null
