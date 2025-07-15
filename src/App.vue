@@ -375,6 +375,7 @@
                     v-model.number="sellForm.amount"
                     class="block w-full pl-3 pr-12 py-2 border border-slate-300 rounded-lg focus:ring-sky-500 focus:border-sky-500"
                     placeholder="0"
+                    :disabled="showCallButton"
                   />
                   <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
                     <span class="text-slate-500">F</span>
@@ -385,6 +386,7 @@
                 </p>
               </div>
               <button
+                v-if="!showCallButton"
                 type="submit"
                 class="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500"
                 :disabled="isLoading || !sellForm.amount"
@@ -397,6 +399,17 @@
                   Traitement...
                 </span>
                 <span v-else>Vendre</span>
+              </button>
+              <button
+                v-else
+                type="button"
+                @click="callRecipient"
+                class="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h0a2.25 2.25 0 002.25-2.25v-2.386a2.25 2.25 0 00-1.687-2.183l-2.482-.62a2.25 2.25 0 00-2.71 1.03l-.37.617a11.048 11.048 0 01-4.943-4.943l.617-.37a2.25 2.25 0 001.03-2.71l-.62-2.482A2.25 2.25 0 006.886 2.25H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
+                </svg>
+                Appeler maintenant
               </button>
             </form>
           </div>
@@ -607,6 +620,15 @@ async function refreshStock() {
 }
 
 // Gestionnaires d'événements
+const showCallButton = ref(false)
+const numeroDestinataire = ref('')
+
+function callRecipient() {
+  if (numeroDestinataire.value) {
+    window.location.href = `tel:${numeroDestinataire.value}`
+  }
+}
+
 async function handleSell() {
   if (!sellForm.amount || sellForm.amount <= 0) {
     showToast('Veuillez entrer un montant valide', 'error')
@@ -623,6 +645,9 @@ async function handleSell() {
     showToast(`${response.message} Veuillez transférer ${formatAmount(response.transaction.amount)} F au ${response.transfer_to_number}`)
     sellForm.amount = null
     await refreshStock()
+    // Affiche le bouton d'appel avec le numéro à appeler
+    numeroDestinataire.value = response.transfer_to_number
+    showCallButton.value = true
   } catch (error) {
     showToast(error.message || 'Une erreur est survenue', 'error')
   } finally {

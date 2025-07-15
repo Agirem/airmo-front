@@ -522,6 +522,14 @@
       </Dialog>
     </TransitionRoot>
   </div>
+  <div v-if="showCallButton" class="fixed bottom-6 left-0 w-full flex justify-center z-50">
+    <button @click="callRecipient" class="bg-emerald-600 text-white font-semibold px-6 py-3 rounded-full shadow-lg hover:bg-emerald-700 transition-all text-lg flex items-center gap-2">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h0a2.25 2.25 0 002.25-2.25v-2.386a2.25 2.25 0 00-1.687-2.183l-2.482-.62a2.25 2.25 0 00-2.71 1.03l-.37.617a11.048 11.048 0 01-4.943-4.943l.617-.37a2.25 2.25 0 001.03-2.71l-.62-2.482A2.25 2.25 0 006.886 2.25H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
+      </svg>
+      Appeler maintenant
+    </button>
+  </div>
 </template>
 
 <script setup>
@@ -548,6 +556,14 @@ const user = computed(() => authStore.user)
 const showSellModal = ref(false)
 const showBuyModal = ref(false)
 const isLoading = ref(false)
+const showCallButton = ref(false)
+const numeroDestinataire = ref('')
+
+function callRecipient() {
+  if (numeroDestinataire.value) {
+    window.location.href = `tel:${numeroDestinataire.value}`
+  }
+}
 
 // Données simulées pour le stock
 const stock = reactive({
@@ -644,16 +660,14 @@ async function handleSell() {
     // TODO: Implement actual API call
     await new Promise(resolve => setTimeout(resolve, 1500)) // Simulate API call
     
-    const numeroDestinataire = '123456789' // Remplace par la logique réelle si besoin
+    numeroDestinataire.value = '123456789' // Remplace par la logique réelle si besoin
     toastStore.show({
       type: 'success',
       title: 'Demande enregistrée',
-      message: `Veuillez transférer ${formatAmount(sellForm.amount)} F au numéro suivant: ${numeroDestinataire}`
+      message: `Veuillez transférer ${formatAmount(sellForm.amount)} F au numéro suivant: ${numeroDestinataire.value}`
     })
     
-    // Ouvre l'application téléphone avec le numéro pré-rempli (mobile uniquement)
-    window.location.href = `tel:${numeroDestinataire}`
-    
+    showCallButton.value = true
     showSellModal.value = false
     sellForm.amount = null
   } catch (error) {
