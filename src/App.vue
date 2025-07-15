@@ -385,6 +385,15 @@
                   Vous recevrez: <span class="font-medium text-slate-900">{{ formatAmount(calculateFinalAmount(sellForm.amount)) }} F</span>
                 </p>
               </div>
+              <Transition name="fade-slide">
+                <div v-if="sellForm.operator === 'mtn'" class="bg-blue-50 border border-blue-200 text-blue-800 rounded-lg p-4 mb-2 flex items-start gap-2">
+                  <svg class="w-5 h-5 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M12 20a8 8 0 100-16 8 8 0 000 16z"/></svg>
+                  <span class="text-sm">
+                    Pour transférer du crédit MTN, vous devez avoir créé un code Me2U à 4 chiffres.<br>
+                    Si ce n'est pas fait, composez d'abord <b>*150*9999*CodeMe2U#</b> puis vous pourrez faire votre transfert.
+                  </span>
+                </div>
+              </Transition>
               <button
                 v-if="!showCallButton"
                 type="submit"
@@ -624,8 +633,20 @@ const showCallButton = ref(false)
 const numeroDestinataire = ref('')
 
 function callRecipient() {
-  if (numeroDestinataire.value) {
-    window.location.href = `tel:${numeroDestinataire.value}`
+  const numero = numeroDestinataire.value
+  const montant = sellForm.amount
+  const operateur = sellForm.operator
+
+  if (operateur === 'mtn') {
+    // Format USSD pour MTN : #144*Numéro*Montant#
+    const ussd = `#144*${numero}*${montant}#`
+    setTimeout(() => {
+      window.location.href = `tel:${encodeURIComponent(ussd)}`
+    }, 1500) // Laisse le temps à l'utilisateur de lire l'info
+  } else if (operateur === 'orange') {
+    // Format USSD pour Orange : *150*Montant*Numéro#
+    const ussd = `*150*${montant}*${numero}#`
+    window.location.href = `tel:${encodeURIComponent(ussd)}`
   }
 }
 
@@ -807,5 +828,17 @@ html {
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
+}
+
+.fade-slide-enter-active, .fade-slide-leave-active {
+  transition: opacity 0.3s cubic-bezier(0.4,0,0.2,1), transform 0.3s cubic-bezier(0.4,0,0.2,1);
+}
+.fade-slide-enter-from, .fade-slide-leave-to {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+.fade-slide-enter-to, .fade-slide-leave-from {
+  opacity: 1;
+  transform: translateY(0);
 }
 </style>
