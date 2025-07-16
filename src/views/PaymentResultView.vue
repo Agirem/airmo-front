@@ -1,14 +1,14 @@
 <template>
   <div class="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-sky-50 to-slate-100 px-4">
     <div class="bg-white rounded-2xl shadow-lg p-8 max-w-md w-full flex flex-col items-center">
-      <div v-if="paymentStatus === 'success'" class="flex flex-col items-center">
+      <div v-if="status === 'complete'" class="flex flex-col items-center">
         <svg class="h-16 w-16 text-green-500 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2l4-4m5 2a9 9 0 11-18 0a9 9 0 0118 0z" />
         </svg>
         <h1 class="text-2xl font-bold text-slate-900 mb-2">Paiement réussi, merci !</h1>
         <p class="text-slate-600 text-center mb-2">Votre paiement a été traité avec succès.</p>
       </div>
-      <div v-else-if="paymentStatus === 'failed'" class="flex flex-col items-center">
+      <div v-else-if="status === 'failed'" class="flex flex-col items-center">
         <svg class="h-16 w-16 text-red-500 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
         </svg>
@@ -22,19 +22,8 @@
         <h1 class="text-2xl font-bold text-slate-900 mb-2">Paiement annulé ou en attente</h1>
         <p class="text-slate-600 text-center mb-2">Le paiement a été annulé ou est en attente.</p>
       </div>
-      <div class="mt-4 space-y-2 bg-slate-50 rounded-lg px-4 py-3 text-slate-700 text-sm w-full">
-        <div v-if="reference" class="flex flex-col">
-          <span class="font-medium">Référence transaction :</span>
-          <span class="font-mono break-all">{{ reference }}</span>
-        </div>
-        <div v-if="trxref" class="flex flex-col">
-          <span class="font-medium">Référence TRX :</span>
-          <span class="font-mono break-all">{{ trxref }}</span>
-        </div>
-        <div v-if="notchpayTrxref" class="flex flex-col">
-          <span class="font-medium">Référence NotchPay :</span>
-          <span class="font-mono break-all">{{ notchpayTrxref }}</span>
-        </div>
+      <div v-if="reference" class="mt-4 bg-slate-50 rounded-lg px-4 py-2 text-slate-700 text-sm w-full text-center">
+        <span class="font-medium">Référence transaction :</span> {{ reference }}
       </div>
       <router-link to="/dashboard" class="mt-8 inline-block px-6 py-2 bg-sky-600 text-white rounded-lg shadow hover:bg-sky-700 transition">Retour au tableau de bord</router-link>
       <router-link to="/" class="mt-4 inline-block px-6 py-2 bg-slate-200 text-slate-800 rounded-lg shadow hover:bg-slate-300 transition">Aller à l'accueil</router-link>
@@ -44,39 +33,9 @@
 
 <script setup>
 import { useRoute } from 'vue-router'
-import { computed, onMounted } from 'vue'
+import { computed } from 'vue'
 
 const route = useRoute()
-
-// Récupération et normalisation des paramètres de l'URL
+const status = computed(() => route.query.status || '')
 const reference = computed(() => route.query.reference || '')
-const trxref = computed(() => route.query.trxref || '')
-const notchpayTrxref = computed(() => route.query.notchpay_trxref || '')
-
-// Normalisation du statut de paiement
-const paymentStatus = computed(() => {
-  const status = route.query.status?.toLowerCase() || ''
-  
-  // Log pour le débogage
-  console.log('Payment status:', {
-    rawStatus: route.query.status,
-    normalizedStatus: status,
-    reference: reference.value,
-    trxref: trxref.value,
-    notchpayTrxref: notchpayTrxref.value
-  })
-
-  // Mapping des statuts
-  if (status === 'complete' || status === 'success' || status === 'succeeded') {
-    return 'success'
-  } else if (status === 'failed' || status === 'failure' || status === 'error') {
-    return 'failed'
-  }
-  return 'pending'
-})
-
-// Log des paramètres au montage du composant
-onMounted(() => {
-  console.log('Payment result component mounted with query params:', route.query)
-})
-</script>
+</script> 

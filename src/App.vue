@@ -1,9 +1,19 @@
 <template>
-  <div v-if="isLoading && route.name !== 'payment-result'">
+  <div v-if="isLoading">
     Chargement...
   </div>
   <div v-else>
-    <router-view />
+    <!-- Si la route est payment-result, on affiche TOUJOURS le router-view -->
+    <router-view v-if="route.name === 'payment-result'" />
+    <!-- Sinon, on applique la logique d'authentification -->
+    <template v-else>
+      <div v-if="!isAuthenticated">
+        <!-- Login/Register ici -->
+      </div>
+      <div v-else>
+        <router-view />
+      </div>
+    </template>
   </div>
 </template>
 
@@ -17,12 +27,6 @@ const isLoading = ref(true)
 const route = useRoute()
 
 onMounted(async () => {
-  // Si on est sur la page de résultat de paiement, pas besoin de vérifier l'authentification
-  if (route.name === 'payment-result') {
-    isLoading.value = false
-    return
-  }
-
   const token = localStorage.getItem('token')
   if (token) {
     try {
