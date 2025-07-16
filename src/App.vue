@@ -1,11 +1,16 @@
 <template>
-  <div v-if="isLoading">
+  <div v-if="isLoading" class="min-h-screen flex items-center justify-center">
     Chargement...
   </div>
   <div v-else>
-    <!-- Si la route est payment-result, on affiche TOUJOURS le router-view -->
-    <router-view v-if="route.name === 'payment-result'" />
-    <!-- Sinon, on applique la logique d'authentification -->
+    <!-- Debug temporaire -->
+    <div class="text-xs text-red-500">
+      Route name: {{ route.name }}<br>
+      Route path: {{ route.path }}
+    </div>
+    <!-- Affiche PaymentResultView si on est sur cette route -->
+    <router-view v-if="route.name === 'payment-result' || route.path.startsWith('/payment-result')" />
+    <!-- Sinon, logique normale -->
     <template v-else>
       <div v-if="!isAuthenticated">
         <!-- Login/Register ici -->
