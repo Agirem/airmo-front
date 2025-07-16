@@ -231,7 +231,7 @@
   </div>
 
   <!-- Page principale -->
-  <div v-else class="min-h-screen bg-slate-50">
+  <div v-if="!isAuthenticated && $route.name !== 'payment-result'" class="min-h-screen bg-slate-50">
     <!-- En-tête avec informations utilisateur -->
     <header class="bg-white border-b border-slate-200 sticky top-0 z-50">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
