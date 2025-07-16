@@ -1,239 +1,232 @@
 <template>
-  <div v-if="isLoading" class="min-h-screen flex items-center justify-center">
-    Chargement...
-  </div>
-  <div v-else>
-    <div v-if="!isAuthenticated && $route.name !== 'payment-result'">
-      <!-- Login/Register ici -->
-      <div class="min-h-screen bg-slate-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-        <div class="sm:mx-auto sm:w-full sm:max-w-md">
-          <h2 class="mt-6 text-center text-3xl font-bold tracking-tight text-slate-900">
-            {{ currentView === 'login' ? 'Connexion' : 'Créer un compte' }}
-          </h2>
-          <p class="mt-2 text-center text-sm text-slate-600">
-            {{ currentView === 'login' ? 'Ou ' : 'Ou ' }}
-            <button
-              class="font-medium text-sky-600 hover:text-sky-500"
-              @click="switchView(currentView === 'login' ? 'register' : 'login')"
-            >
-              {{ currentView === 'login' ? 'créez un nouveau compte' : 'connectez-vous à votre compte' }}
-            </button>
-          </p>
-        </div>
-        <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-          <div class="card p-8">
-            <form v-if="currentView === 'login'" class="space-y-6" @submit="handleLogin">
-              <div>
-                <label for="phone" class="input-label">
-                  Numéro de téléphone
-                </label>
-                <div class="mt-1">
-                  <input
-                    id="phone"
-                    v-model="loginForm.phone"
-                    name="phone"
-                    type="tel"
-                    required
-                    class="input-field"
-                    placeholder="Ex: 6XXXXXXXX"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label for="password" class="input-label">
-                  Mot de passe
-                </label>
-                <div class="mt-1">
-                  <input
-                    id="password"
-                    v-model="loginForm.password"
-                    name="password"
-                    type="password"
-                    required
-                    class="input-field"
-                    placeholder="••••••••"
-                  />
-                </div>
-              </div>
-
-              <div class="flex items-center justify-between">
-                <div class="flex items-center">
-                  <input
-                    id="remember-me"
-                    name="remember-me"
-                    type="checkbox"
-                    class="h-4 w-4 rounded border-slate-300 text-sky-600 focus:ring-sky-500"
-                  />
-                  <label for="remember-me" class="ml-2 block text-sm text-slate-900">
-                    Se souvenir de moi
-                  </label>
-                </div>
-
-                <div class="text-sm">
-                  <a href="#" class="font-medium text-sky-600 hover:text-sky-500">
-                    Mot de passe oublié?
-                  </a>
-                </div>
-              </div>
-
-              <div>
-                <button
-                  type="submit"
-                  class="btn-primary w-full flex justify-center"
-                  :disabled="isLoading"
-                >
-                  <span v-if="isLoading" class="inline-flex items-center">
-                    <svg class="animate-spin -ml-1 mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                    Connexion en cours...
-                  </span>
-                  <span v-else>Se connecter</span>
-                </button>
-              </div>
-            </form>
-
-            <form v-else class="space-y-6" @submit="handleRegister">
-              <!-- Nom complet -->
-              <div>
-                <label for="name" class="input-label">
-                  Nom complet
-                </label>
-                <div class="mt-1">
-                  <input
-                    id="name"
-                    v-model="registerForm.name"
-                    name="name"
-                    type="text"
-                    required
-                    class="input-field"
-                    placeholder="Ex: John Doe"
-                  />
-                </div>
-              </div>
-
-              <!-- Numéro de téléphone -->
-              <div>
-                <label for="register-phone" class="input-label">
-                  Numéro de téléphone
-                </label>
-                <div class="mt-1">
-                  <div class="relative">
-                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-500">
-                      +237
-                    </span>
-                    <input
-                      id="register-phone"
-                      v-model="registerForm.phone"
-                      name="phone"
-                      type="tel"
-                      required
-                      maxlength="9"
-                      class="input-field pl-14"
-                      placeholder="6XXXXXXXX"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              <!-- Opérateur -->
-              <div>
-                <label for="operator" class="input-label">
-                  Opérateur principal
-                </label>
-                <div class="mt-1">
-                  <select
-                    id="operator"
-                    v-model="registerForm.operator"
-                    name="operator"
-                    class="input-field"
-                    required
-                  >
-                    <option value="mtn">MTN Mobile Money</option>
-                    <option value="orange">Orange Money</option>
-                  </select>
-                </div>
-              </div>
-
-              <!-- Mot de passe -->
-              <div>
-                <label for="register-password" class="input-label">
-                  Mot de passe
-                </label>
-                <div class="mt-1">
-                  <input
-                    id="register-password"
-                    v-model="registerForm.password"
-                    name="password"
-                    type="password"
-                    required
-                    class="input-field"
-                    placeholder="••••••••"
-                  />
-                </div>
-              </div>
-
-              <!-- Confirmation mot de passe -->
-              <div>
-                <label for="confirm-password" class="input-label">
-                  Confirmer le mot de passe
-                </label>
-                <div class="mt-1">
-                  <input
-                    id="confirm-password"
-                    v-model="registerForm.confirmPassword"
-                    name="confirm-password"
-                    type="password"
-                    required
-                    class="input-field"
-                    placeholder="••••••••"
-                  />
-                </div>
-              </div>
-
-              <!-- Conditions d'utilisation -->
-              <div class="flex items-center">
-                <input
-                  id="terms"
-                  name="terms"
-                  type="checkbox"
-                  required
-                  class="h-4 w-4 rounded border-slate-300 text-sky-600 focus:ring-sky-500"
-                />
-                <label for="terms" class="ml-2 block text-sm text-slate-900">
-                  J'accepte les
-                  <a href="#" class="font-medium text-sky-600 hover:text-sky-500">
-                    conditions d'utilisation
-                  </a>
-                </label>
-              </div>
-
-              <!-- Bouton d'inscription -->
-              <div>
-                <button
-                  type="submit"
-                  class="btn-primary w-full flex justify-center"
-                  :disabled="isLoading"
-                >
-                  <span v-if="isLoading" class="inline-flex items-center">
-                    <svg class="animate-spin -ml-1 mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                    Inscription en cours...
-                  </span>
-                  <span v-else>S'inscrire</span>
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
+  <!-- Pages d'authentification -->
+  <div v-if="!isAuthenticated" class="min-h-screen bg-slate-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div class="sm:mx-auto sm:w-full sm:max-w-md">
+      <h2 class="mt-6 text-center text-3xl font-bold tracking-tight text-slate-900">
+        {{ currentView === 'login' ? 'Connexion' : 'Créer un compte' }}
+      </h2>
+      <p class="mt-2 text-center text-sm text-slate-600">
+        {{ currentView === 'login' ? 'Ou ' : 'Ou ' }}
+        <button
+          class="font-medium text-sky-600 hover:text-sky-500"
+          @click="switchView(currentView === 'login' ? 'register' : 'login')"
+        >
+          {{ currentView === 'login' ? 'créez un nouveau compte' : 'connectez-vous à votre compte' }}
+        </button>
+      </p>
     </div>
-    <div v-else>
-      <router-view />
+
+    <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+      <div class="card p-8">
+        <!-- Formulaire de connexion -->
+        <form v-if="currentView === 'login'" class="space-y-6" @submit="handleLogin">
+          <div>
+            <label for="phone" class="input-label">
+              Numéro de téléphone
+            </label>
+            <div class="mt-1">
+              <input
+                id="phone"
+                v-model="loginForm.phone"
+                name="phone"
+                type="tel"
+                required
+                class="input-field"
+                placeholder="Ex: 6XXXXXXXX"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label for="password" class="input-label">
+              Mot de passe
+            </label>
+            <div class="mt-1">
+              <input
+                id="password"
+                v-model="loginForm.password"
+                name="password"
+                type="password"
+                required
+                class="input-field"
+                placeholder="••••••••"
+              />
+            </div>
+          </div>
+
+          <div class="flex items-center justify-between">
+            <div class="flex items-center">
+              <input
+                id="remember-me"
+                name="remember-me"
+                type="checkbox"
+                class="h-4 w-4 rounded border-slate-300 text-sky-600 focus:ring-sky-500"
+              />
+              <label for="remember-me" class="ml-2 block text-sm text-slate-900">
+                Se souvenir de moi
+              </label>
+            </div>
+
+            <div class="text-sm">
+              <a href="#" class="font-medium text-sky-600 hover:text-sky-500">
+                Mot de passe oublié?
+              </a>
+            </div>
+          </div>
+
+          <div>
+            <button
+              type="submit"
+              class="btn-primary w-full flex justify-center"
+              :disabled="isLoading"
+            >
+              <span v-if="isLoading" class="inline-flex items-center">
+                <svg class="animate-spin -ml-1 mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                Connexion en cours...
+              </span>
+              <span v-else>Se connecter</span>
+            </button>
+          </div>
+        </form>
+
+        <!-- Formulaire d'inscription -->
+        <form v-else class="space-y-6" @submit="handleRegister">
+          <!-- Nom complet -->
+          <div>
+            <label for="name" class="input-label">
+              Nom complet
+            </label>
+            <div class="mt-1">
+              <input
+                id="name"
+                v-model="registerForm.name"
+                name="name"
+                type="text"
+                required
+                class="input-field"
+                placeholder="Ex: John Doe"
+              />
+            </div>
+          </div>
+
+          <!-- Numéro de téléphone -->
+          <div>
+            <label for="register-phone" class="input-label">
+              Numéro de téléphone
+            </label>
+            <div class="mt-1">
+              <div class="relative">
+                <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-500">
+                  +237
+                </span>
+                <input
+                  id="register-phone"
+                  v-model="registerForm.phone"
+                  name="phone"
+                  type="tel"
+                  required
+                  maxlength="9"
+                  class="input-field pl-14"
+                  placeholder="6XXXXXXXX"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- Opérateur -->
+          <div>
+            <label for="operator" class="input-label">
+              Opérateur principal
+            </label>
+            <div class="mt-1">
+              <select
+                id="operator"
+                v-model="registerForm.operator"
+                name="operator"
+                class="input-field"
+                required
+              >
+                <option value="mtn">MTN Mobile Money</option>
+                <option value="orange">Orange Money</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Mot de passe -->
+          <div>
+            <label for="register-password" class="input-label">
+              Mot de passe
+            </label>
+            <div class="mt-1">
+              <input
+                id="register-password"
+                v-model="registerForm.password"
+                name="password"
+                type="password"
+                required
+                class="input-field"
+                placeholder="••••••••"
+              />
+            </div>
+          </div>
+
+          <!-- Confirmation mot de passe -->
+          <div>
+            <label for="confirm-password" class="input-label">
+              Confirmer le mot de passe
+            </label>
+            <div class="mt-1">
+              <input
+                id="confirm-password"
+                v-model="registerForm.confirmPassword"
+                name="confirm-password"
+                type="password"
+                required
+                class="input-field"
+                placeholder="••••••••"
+              />
+            </div>
+          </div>
+
+          <!-- Conditions d'utilisation -->
+          <div class="flex items-center">
+            <input
+              id="terms"
+              name="terms"
+              type="checkbox"
+              required
+              class="h-4 w-4 rounded border-slate-300 text-sky-600 focus:ring-sky-500"
+            />
+            <label for="terms" class="ml-2 block text-sm text-slate-900">
+              J'accepte les
+              <a href="#" class="font-medium text-sky-600 hover:text-sky-500">
+                conditions d'utilisation
+              </a>
+            </label>
+          </div>
+
+          <!-- Bouton d'inscription -->
+          <div>
+            <button
+              type="submit"
+              class="btn-primary w-full flex justify-center"
+              :disabled="isLoading"
+            >
+              <span v-if="isLoading" class="inline-flex items-center">
+                <svg class="animate-spin -ml-1 mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                Inscription en cours...
+              </span>
+              <span v-else>S'inscrire</span>
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
 
@@ -537,7 +530,6 @@
 
 <script setup>
 import { ref, reactive, TransitionGroup, onMounted } from 'vue'
-import { useRoute } from 'vue-router'
 import { apiService } from './services/api'
 
 // État local
@@ -595,7 +587,6 @@ onMounted(async () => {
       isAuthenticated.value = false
     }
   }
-  isLoading.value = false
 })
 
 // Fonctions utilitaires
