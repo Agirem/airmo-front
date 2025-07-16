@@ -5,11 +5,11 @@
   <div v-else>
     <!-- Debug temporaire -->
     <div class="text-xs text-red-500">
-      Route name: {{ route.name }}<br>
-      Route path: {{ route.path }}
+      Route name: {{ route?.name }}<br>
+      Route path: {{ route?.path }}
     </div>
     <!-- Affiche PaymentResultView si on est sur cette route -->
-    <router-view v-if="route.name === 'payment-result' || route.path.startsWith('/payment-result')" />
+    <router-view v-if="route && (route.name === 'payment-result' || (route.path && route.path.startsWith('/payment-result')))" />
     <!-- Sinon, logique normale -->
     <template v-else>
       <div v-if="!isAuthenticated">
