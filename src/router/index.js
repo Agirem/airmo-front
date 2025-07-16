@@ -33,11 +33,6 @@ const router = createRouter({
       meta: { requiresAuth: true }
     },
     {
-      path: '/payment-result',
-      name: 'payment-result',
-      component: () => import('@/views/PaymentResultView.vue')
-    },
-    {
       path: '/:pathMatch(.*)*',
       name: 'not-found',
       component: () => import('@/views/NotFoundView.vue')
@@ -46,11 +41,6 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  // Exception pour la page de résultat de paiement
-  if (to.name === 'payment-result') {
-    return next()
-  }
-
   const authStore = useAuthStore()
   
   if (to.meta.requiresAuth && !authStore.isAuthenticated) {
