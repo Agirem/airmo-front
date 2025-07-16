@@ -46,6 +46,11 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
+  // Exception pour la page de résultat de paiement
+  if (to.name === 'payment-result') {
+    return next()
+  }
+
   const authStore = useAuthStore()
   
   if (to.meta.requiresAuth && !authStore.isAuthenticated) {
