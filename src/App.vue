@@ -355,7 +355,7 @@
               <span class="text-purple-600 font-medium">N</span>
             </div>
             <div>
-              <h3 class="text-sm font-medium text-slate-900">NotchPay</h3>
+              <h3 class="text-sm font-medium text-slate-900">Solde Convertissable</h3>
               <p class="text-xs text-slate-500">Solde disponible</p>
             </div>
           </div>
