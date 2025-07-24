@@ -822,8 +822,8 @@ const notchPayBalance = ref(0)
 
 async function refreshNotchPayBalance() {
   try {
-    const balanceData = await apiService.getNotchPayBalance()
-    notchPayBalance.value = balanceData.balance
+    const balance = await apiService.getNotchPayBalance()
+    notchPayBalance.value = balance
   } catch (error) {
     showToast('Erreur lors de la récupération du solde NotchPay', 'error')
   }

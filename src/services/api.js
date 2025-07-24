@@ -174,7 +174,7 @@ class ApiService {
     }
 
     const data = await response.json()
-    return data.balance.total
+    return data.balance.available
   }
 }
 
