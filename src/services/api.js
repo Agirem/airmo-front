@@ -173,7 +173,8 @@ class ApiService {
       throw new Error('Erreur lors de la récupération du solde NotchPay')
     }
 
-    return response.json()
+    const data = await response.json()
+    return data.balance.total
   }
 }
 
