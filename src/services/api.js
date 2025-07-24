@@ -176,6 +176,18 @@ class ApiService {
     const data = await response.json()
     return data.balance.available
   }
+
+  async getTransactionHistory() {
+    const response = await fetch(`${API_URL}/transactions/history`, {
+      headers: this.getHeaders()
+    })
+
+    if (!response.ok) {
+      throw new Error('Erreur lors de la récupération de l\'historique')
+    }
+
+    return response.json()
+  }
 }
 
 export const apiService = new ApiService()
