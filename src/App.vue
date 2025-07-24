@@ -239,9 +239,7 @@
           <!-- Logo et titre -->
           <div class="flex items-center">
             <div class="flex-shrink-0">
-              <div class="h-8 w-8 bg-gradient-to-r from-sky-500 to-sky-600 rounded-lg flex items-center justify-center">
-                <span class="text-white font-bold">A</span>
-              </div>
+              <img src="/airmo.png" alt="AirMo Logo" class="h-8 w-8" />
             </div>
             <div class="hidden md:block ml-4">
               <h1 class="text-xl font-semibold text-slate-900">
@@ -252,9 +250,6 @@
 
           <!-- Menu utilisateur -->
           <div class="flex items-center">
-            <!-- Solde total -->
-         
-
             <!-- Menu déroulant utilisateur -->
             <div class="relative ml-3">
               <div>
@@ -316,7 +311,7 @@
     <!-- Contenu principal -->
     <main class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <!-- Stock disponible -->
-      <div class="grid grid-cols-2 gap-4 mb-8">
+      <div class="grid grid-cols-3 gap-4 mb-8">
         <div class="bg-gradient-to-br from-amber-50 to-slate-50 rounded-2xl p-4 sm:p-6 border border-amber-100">
           <div class="flex items-center space-x-3 mb-4">
             <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-amber-100 flex items-center justify-center">
@@ -329,6 +324,7 @@
           </div>
           <p class="text-xl sm:text-2xl font-bold text-slate-900">{{ formatAmount(stock.mtn) }} F</p>
         </div>
+
         <div class="bg-gradient-to-br from-orange-50 to-slate-50 rounded-2xl p-4 sm:p-6 border border-orange-100">
           <div class="flex items-center space-x-3 mb-4">
             <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-orange-100 flex items-center justify-center">
@@ -340,6 +336,19 @@
             </div>
           </div>
           <p class="text-xl sm:text-2xl font-bold text-slate-900">{{ formatAmount(stock.orange) }} F</p>
+        </div>
+
+        <div class="bg-gradient-to-br from-purple-50 to-slate-50 rounded-2xl p-4 sm:p-6 border border-purple-100">
+          <div class="flex items-center space-x-3 mb-4">
+            <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-purple-100 flex items-center justify-center">
+              <span class="text-purple-600 font-medium">N</span>
+            </div>
+            <div>
+              <h3 class="text-sm font-medium text-slate-900">NotchPay</h3>
+              <p class="text-xs text-slate-500">Solde disponible</p>
+            </div>
+          </div>
+          <p class="text-xl sm:text-2xl font-bold text-slate-900">{{ formatAmount(notchPayBalance) }} F</p>
         </div>
       </div>
 
@@ -582,6 +591,7 @@ onMounted(async () => {
       user.value = userData
       isAuthenticated.value = true
       await refreshStock()
+      await refreshNotchPayBalance()
     } catch (error) {
       apiService.clearToken()
       isAuthenticated.value = false
@@ -805,6 +815,18 @@ function switchView(view) {
   registerForm.phone = ''
   registerForm.password = ''
   registerForm.confirmPassword = ''
+}
+
+// Dans la section script, après la déclaration des autres refs
+const notchPayBalance = ref(0)
+
+async function refreshNotchPayBalance() {
+  try {
+    const balanceData = await apiService.getNotchPayBalance()
+    notchPayBalance.value = balanceData.balance
+  } catch (error) {
+    showToast('Erreur lors de la récupération du solde NotchPay', 'error')
+  }
 }
 </script>
 

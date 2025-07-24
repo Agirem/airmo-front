@@ -163,6 +163,18 @@ class ApiService {
 
     return response.json()
   }
+
+  async getNotchPayBalance() {
+    const response = await fetch(`${API_URL}/notchpay-balance`, {
+      headers: this.getHeaders()
+    })
+
+    if (!response.ok) {
+      throw new Error('Erreur lors de la récupération du solde NotchPay')
+    }
+
+    return response.json()
+  }
 }
 
-export const apiService = new ApiService() 
+export const apiService = new ApiService()

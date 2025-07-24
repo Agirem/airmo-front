@@ -3,7 +3,7 @@
     <div class="sm:mx-auto sm:w-full sm:max-w-md flex flex-col items-center">
       <img
         class="mx-auto h-16 w-auto mb-2 drop-shadow-lg"
-        src="/logo.svg"
+        src="/airmo.png"
         alt="Logo AirMo"
       />
       <h2 class="mt-2 text-center text-3xl font-extrabold text-slate-900">
